@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const PromoBar = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  
   const promos = [
     "Hot Days | Hasta 40% off en seleccionados + 10% off extra",
     "Hasta 6 cuotas sin interés",
@@ -8,12 +10,25 @@ const PromoBar = () => {
     "Nueva colección primavera-verano"
   ];
   
-  // Duplicamos los elementos para crear un efecto infinito de scroll
   const duplicatedPromos = [...promos, ...promos];
   
   return (
-    <div className="w-full bg-gray-100 overflow-hidden py-2">
-      <div className="flex animate-scroll whitespace-nowrap">
+    <div 
+      className="w-full bg-gray-100 overflow-hidden py-2"
+      role="region"
+      aria-label="Avisos promocionales"
+    >
+      <div 
+        className="flex whitespace-nowrap"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          animation: isHovered 
+            ? 'none' 
+            : 'scrollPromo 20s linear infinite',
+          transform: isHovered ? 'translateX(0)' : undefined
+        }}
+      >
         {duplicatedPromos.map((promo, index) => (
           <div 
             key={index} 
@@ -23,6 +38,13 @@ const PromoBar = () => {
           </div>
         ))}
       </div>
+      
+      <style jsx>{`
+        @keyframes scrollPromo {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
     </div>
   );
 };
